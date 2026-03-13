@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MUD</title>
+</head>
+<body>
+
+<pre id="output"></pre>
+<div id="prompt">&gt; <span id="cursor">_</span></div>
+
+<script>
+  const lines = [
+    "============================================================",
+    " The Wayward Flagon - Upstairs Room (East)",
+    "============================================================",
+    "",
+    "You are in a small room on the second floor of the Wayward Flagon.",
+    "The floorboards are uneven and creak underfoot. The smell of",
+    "tallow candles and old wood hangs in the air, faintly laced",
+    "with the distant noise of the taproom below.",
+    "",
+    "A DOOR stands to the west, CLOSED. A thin strip of amber light",
+    "leaks beneath it, and you can hear muffled voices from the hall.",
+    "",
+    "A WINDOW occupies most of the north wall, CLOSED and latched.",
+    "Through the wavy glass you can make out the dark rooftops of",
+    "the town and a sliver of overcast sky. Rain is beginning to tap",
+    "lightly against the pane.",
+    "",
+    "Against the east wall sits a WOODEN BED with a straw mattress,",
+    "a wool blanket folded at its foot, and a single flat pillow.",
+    "It looks hard but dry.",
+    "",
+    "In the corner stands a WRITING DESK, scarred from years of use.",
+    "On it you can see:",
+    "  - a tallow CANDLE, half-burned, set in a tin holder",
+    "  - a small INKWELL, nearly empty",
+    "  - a folded LETTER, sealed with plain wax, addressed to no one",
+    "  - a wooden CUP with a few coins rattling at the bottom",
+    "",
+    "A iron HOOK is nailed beside the door. Nothing hangs from it.",
+    "",
+    "------------------------------------------------------------",
+    " Exits: none apparent.",
+    "------------------------------------------------------------",
+    "",
+  ];
+
+  const output = document.getElementById("output");
+
+  let i = 0;
+  function printLine() {
+    if (i < lines.length) {
+      output.textContent += lines[i] + "\n";
+      i++;
+      setTimeout(printLine, 18);
+    }
+  }
+
+  printLine();
+
+  // Blinking cursor
+  const cursor = document.getElementById("cursor");
+  setInterval(() => {
+    cursor.style.visibility = cursor.style.visibility === "hidden" ? "visible" : "hidden";
+  }, 530);
+</script>
+
+</body>
+</html>
