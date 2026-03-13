@@ -14,12 +14,15 @@
 <div id="prompt">&gt; <span id="cursor">_</span></div>
 
 <script>
+  const o = '<span style="color:#c47a3a">';
+  const c = '</span>';
+
   const lines = [
     "The Wayward Flagon -- Upstairs Room",
     "",
-    "Upstairs at the Wayward Flagon. The room is small and plain --",
-    "a bed, a desk, a window. The desk has a candle, an inkwell,",
-    "a cup, and some parchment on it. The door to the hall is closed.",
+    `Upstairs at the Wayward Flagon. The ${o}room${c} is small and plain --`,
+    `a ${o}bed${c}, a ${o}desk${c}, a ${o}window${c}. The ${o}desk${c} has a ${o}candle${c}, an ${o}inkwell${c},`,
+    `a ${o}cup${c}, and some ${o}parchment${c} on it. The ${o}door${c} to the hall is closed.`,
     "It smells of wood and tallow.",
     "",
   ];
@@ -29,7 +32,7 @@
   let i = 0;
   function printLine() {
     if (i < lines.length) {
-      output.textContent += lines[i] + "\n";
+      output.innerHTML += lines[i] + "\n";
       i++;
       setTimeout(printLine, 18);
     }
