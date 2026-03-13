@@ -5,46 +5,107 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>MUD</title>
   <style>
-    body { background: black; color: white; }
+    body { background: black; color: white; margin: 0; padding: 8px; padding-bottom: 36px; box-sizing: border-box; }
+    pre { font-family: monospace; font-size: 1em; white-space: pre-wrap; }
+    #input-line { display: flex; position: fixed; bottom: 0; left: 0; width: 100%; background: black; padding: 8px; box-sizing: border-box; }
+    #input-line span { margin-right: 4px; }
+    #cmd { background: black; color: white; border: none; outline: none; font-family: monospace; font-size: 1em; width: 100%; caret-color: white; }
   </style>
 </head>
 <body>
 
 <pre id="output"></pre>
-<div id="prompt">&gt; <span id="cursor">_</span></div>
+<div id="input-line">
+  <span>&gt;</span>
+  <input id="cmd" type="text" autofocus autocomplete="off" spellcheck="false" />
+</div>
 
 <script>
-  const o = '<span style="color:#c47a3a">';
-  const c = '</span>';
+  const item = t => `<span style="color:#c47a3a">${t}</span>`;
 
-  const lines = [
-    "The Wayward Flagon -- Upstairs Room",
-    "",
-    `Upstairs at the Wayward Flagon. The ${o}room${c} is small and plain --`,
-    `a ${o}bed${c}, a ${o}desk${c}, a ${o}window${c}. The ${o}desk${c} has a ${o}candle${c}, an ${o}inkwell${c},`,
-    `a ${o}cup${c}, and some ${o}parchment${c} on it. The ${o}door${c} to the hall is closed.`,
-    "It smells of wood and tallow.",
-    "",
-  ];
+  const nodes = {
+    room: [
+      "Upstairs at the Wayward Flagon. The room is small and plain --",
+      `a ${item("bed")}, a ${item("desk")}, a ${item("window")}. The ${item("desk")} has a ${item("candle")}, an ${item("inkwell")},`,
+      `a ${item("cup")}, and some ${item("parchment")} on it. The ${item("door")} to the hall is closed.`,
+      "It smells of wood and tallow.",
+    ],
+    bed: [
+      "A narrow bed pushed against the wall. Wool blanket, flat pillow, straw mattress.",
+      "It will do.",
+    ],
+    desk: [
+      `A plain writing desk. On it: a ${item("candle")}, an ${item("inkwell")}, a ${item("cup")}, and some ${item("parchment")}.`,
+    ],
+    window: [
+      "A small window, latched shut. The shutters are closed.",
+    ],
+    candle: [
+      "A tallow candle in a tin holder. It is unlit.",
+    ],
+    inkwell: [
+      "A small glass inkwell. There is ink in it.",
+    ],
+    cup: [
+      "A plain wooden cup. Empty.",
+    ],
+    parchment: [
+      "A few sheets of blank parchment, slightly rough to the touch.",
+    ],
+    door: [
+      "A wooden door. Closed. You can hear nothing through it.",
+    ],
+  };
 
   const output = document.getElementById("output");
+  const cmd = document.getElementById("cmd");
 
-  let i = 0;
-  function printLine() {
-    if (i < lines.length) {
-      output.innerHTML += lines[i] + "\n";
-      i++;
-      setTimeout(printLine, 18);
+  function print(lines) {
+    lines.forEach(line => {
+      output.innerHTML += line + "\n";
+    });
+    output.innerHTML += "\n";
+    window.scrollTo(0, document.body.scrollHeight);
+  }
+
+  function printTitle() {
+    output.innerHTML += "The Wayward Flagon -- Upstairs Room\n\n";
+  }
+
+  function handleInput(raw) {
+    const input = raw.trim().toLowerCase();
+    if (!input) return;
+
+    print([`> ${raw}`]);
+
+    const parts = input.split(/\s+/);
+    const verb = parts[0];
+    const keyword = parts[1];
+
+    if (verb === "look") {
+      if (!keyword || keyword === "room") {
+        print(nodes.room);
+      } else if (nodes[keyword]) {
+        print(nodes[keyword]);
+      } else {
+        print([`You don't see any ${keyword} here.`]);
+      }
+    } else {
+      print(["You can't do that yet."]);
     }
   }
 
-  printLine();
+  // Init
+  printTitle();
+  print(nodes.room);
 
-  // Blinking cursor
-  const cursor = document.getElementById("cursor");
-  setInterval(() => {
-    cursor.style.visibility = cursor.style.visibility === "hidden" ? "visible" : "hidden";
-  }, 530);
+  cmd.addEventListener("keydown", e => {
+    if (e.key === "Enter") {
+      const val = cmd.value;
+      cmd.value = "";
+      handleInput(val);
+    }
+  });
 </script>
 
 </body>
